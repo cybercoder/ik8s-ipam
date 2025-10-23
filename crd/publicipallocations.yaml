@@ -21,7 +21,7 @@ spec:
           properties:
             spec:
               type: object
-              required: ["poolRef", "address", "macAddress"]
+              required: ["publicIpPoolName", "address", "macAddress"]
               properties:
                 publicIpPoolName:
                   type: string
