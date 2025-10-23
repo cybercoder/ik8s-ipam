@@ -16,7 +16,7 @@ type AllocationHistory struct {
 
 // PublicIPAllocationSpec defines the desired allocation information.
 type PublicIPAllocationSpec struct {
-	PoolRef            string `json:"poolRef"` // Name of PublicIPPool this IP came from
+	PublicIpPoolName   string `json:"publicIpPoolName"` // Name of PublicIPPool this IP came from
 	ContainerInterface string `json:"containerInterface"`
 	IpFamily           string `json:"ipFamily"`
 	Address            string `json:"address"`    // Allocated IP
