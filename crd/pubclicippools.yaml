@@ -21,11 +21,11 @@ spec:
           properties:
             spec:
               type: object
-              required: ["ipFamily", "cidr"]
+              required: ["ipFamily", "cidr", "gateway"]
               properties:
-                networkName:
-                  type: string
-                  description: Name of the logical switch or OVN network
+                enabled:
+                  type: boolean
+                  default: true
                 ipFamily:
                   type: string
                   enum: ["IPv4", "IPv6"]
@@ -36,9 +36,6 @@ spec:
                 gateway:
                   type: string
                   description: Optional gateway address for this pool
-                autoAssign:
-                  type: boolean
-                  description: Whether to automatically allocate IPs from this pool
             status:
               type: object
               properties:
@@ -66,3 +63,23 @@ spec:
         - jsonPath: .status.allocatedIPs
         - jsonPath: .status.freeIPs
         - jsonPath: .spec.ipFamily
+        - jsonPath: .spec.enabled
+      additionalPrinterColumns:
+        - jsonPath: .spec.ipFamily
+          name: IPFamily
+          type: string
+        - jsonPath: .spec.cidr
+          name: CIDR
+          type: string
+        - jsonPath: .spec.enabled
+          name: Enabled
+          type: boolean
+        - jsonPath: .status.totalIPs
+          name: totalIPs
+          type: integer
+        - jsonPath: .status.allocatedIPs
+          name: allocatedIPs
+          type: integer
+        - jsonPath: .status.freeIPs
+          name: freeIPs
+          type: integer

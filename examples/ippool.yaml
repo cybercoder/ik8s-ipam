@@ -1,0 +1,8 @@
+apiVersion: ovn.ik8s.ir/v1alpha1
+kind: PublicIPPool
+metadata:
+  name: p1
+spec:
+  ipFamily: IPv4
+  cidr: 172.16.22.0/24
+  gateway: 192.168.12.1
