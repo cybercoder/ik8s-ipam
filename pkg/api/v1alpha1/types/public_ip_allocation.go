@@ -4,25 +4,12 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-//
-// PublicIPAllocation
-// Tracks an IP and MAC allocation from a PublicIPPool, bound to a VM or Pod,
-// and keeps historical allocation records for persistence/auditing.
-//
-
-// AllocationOwnerRef represents the object (VM, Pod, etc.) using the IP.
-type AllocationOwnerRef struct {
-	Kind      string `json:"kind"`      // e.g., "VirtualMachine" or "Pod"
-	Namespace string `json:"namespace"` // Namespace of the owner
-	Name      string `json:"name"`      // Name of the owner
-}
-
 // AllocationHistory represents a historical allocation entry.
 type AllocationHistory struct {
 	ContainerInterface string      `json:"containerInterface"`
 	Address            string      `json:"address"`     // IP address used
 	MacAddress         string      `json:"macAddress"`  // MAC used
-	Owner              string      `json:"owner"`       // owner namespace/name
+	Owner              string      `json:"owner"`       // owner kind/namespace/name
 	AllocatedAt        metav1.Time `json:"allocatedAt"` // when allocated
 	ReleasedAt         metav1.Time `json:"releasedAt"`  // when released
 }
@@ -34,8 +21,9 @@ type PublicIPAllocationSpec struct {
 	IpFamily           string `json:"ipFamily"`
 	Address            string `json:"address"`    // Allocated IP
 	MacAddress         string `json:"macAddress"` // Allocated MAC
-	// NOTE: omitempty removed — nested structs must be pointers if you want optionality.
-	OwnerRef AllocationOwnerRef `json:"ownerRef"`
+	ResourceKind       string `json:"resourceKind"`
+	ResourceNamespace  string `json:"resourceNamespace"`
+	ResourceName       string `json:"resourceName"`
 }
 
 // PublicIPAllocationStatus defines the observed allocation state and history.

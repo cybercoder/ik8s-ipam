@@ -28,7 +28,7 @@ func NewIpamService() *IpamService {
 func (s *IpamService) FindOrCreateIPAssignment(r types.IpAssignmentRequestBody) (*types.PublicIPAllocation, error) {
 	ctx := context.Background()
 	list, err := s.dynamicK8sClient.Resource(types.PublicIPAllocationGVR).List(ctx, v1.ListOptions{
-		FieldSelector: "spec.containerInterface=" + r.ContainerInterface + ",spec.macAddress=" + r.Mac + ",status.active=true",
+		FieldSelector: "spec.containerInterface=" + r.ContainerInterface + ",spec.resourceNamespace=" + r.Namespace + ",spec.resourceName=" + r.Name,
 	})
 	if err != nil {
 		return nil, err
@@ -88,11 +88,9 @@ func (s *IpamService) createIPAssignment(containerInterface, namespace, name, ip
 			ContainerInterface: containerInterface,
 			IpFamily:           ipFamily,
 			Address:            ip,
-			OwnerRef: types.AllocationOwnerRef{
-				Kind:      "VirtualMachine",
-				Namespace: namespace,
-				Name:      name,
-			},
+			ResourceKind:       "VirtualMachine",
+			ResourceNamespace:  namespace,
+			ResourceName:       name,
 		},
 		Status: types.PublicIPAllocationStatus{
 			AllocatedAt: v1.NewTime(time.Now()),

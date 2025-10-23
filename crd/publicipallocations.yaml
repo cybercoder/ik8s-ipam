@@ -23,7 +23,7 @@ spec:
               type: object
               required: ["poolRef", "address", "macAddress"]
               properties:
-                poolRef:
+                publicIpPoolName:
                   type: string
                   description: Name of the PublicIPPool this allocation belongs to
                 containerInterface:
@@ -37,16 +37,13 @@ spec:
                 ipFamily:
                   type: string
                   enum: ["IPv4", "IPv6"]
-                ownerRef:
-                  type: object
-                  description: The Kubernetes owner of this allocation (VM or Pod)
-                  properties:
-                    kind:
-                      type: string
-                    namespace:
-                      type: string
-                    name:
-                      type: string
+                resourceKind:
+                  type: string
+                  enum: ["VirtualMachine"]
+                resourceNamespace:
+                  type: string
+                resourceName:
+                  type: string
             status:
               type: object
               properties:
@@ -81,10 +78,9 @@ spec:
       selectableFields:
         - jsonPath: .spec.ipFamily
         - jsonPath: .spec.containerInterface
-        - jsonPath: .spec.address
-        - jsonPath: .spec.macAddress
-        - jsonPath: .status.active
-        - jsonPath: .status.releasedAt
+        - jsonPath: .spec.resourceNamespace
+        - jsonPath: .spec.resourceName
+        - jsonPath: .spec.resourceKind
       additionalPrinterColumns:
         - jsonPath: .spec.ownerRef.kind
           name: Kind

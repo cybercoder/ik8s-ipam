@@ -64,4 +64,5 @@ spec:
       selectableFields:
         - jsonPath: .status.totalIPs
         - jsonPath: .status.allocatedIPs
-        - jsonPath: .status.freeIps
+        - jsonPath: .status.freeIPs
+        - jsonPath: .spec.ipFamily
