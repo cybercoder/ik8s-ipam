@@ -1,0 +1,67 @@
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: publicippools.ovn.ik8s.ir
+spec:
+  group: ovn.ik8s.ir
+  names:
+    plural: publicippools
+    singular: publicippool
+    kind: PublicIPPool
+    shortNames:
+      - pipp
+  scope: Cluster
+  versions:
+    - name: v1alpha1
+      served: true
+      storage: true
+      schema:
+        openAPIV3Schema:
+          type: object
+          properties:
+            spec:
+              type: object
+              required: ["ipFamily", "cidr"]
+              properties:
+                networkName:
+                  type: string
+                  description: Name of the logical switch or OVN network
+                ipFamily:
+                  type: string
+                  enum: ["IPv4", "IPv6"]
+                  description: IP family of the pool
+                cidr:
+                  type: string
+                  description: The IP range in CIDR format (e.g., 192.168.100.0/24 or fd00::/64)
+                gateway:
+                  type: string
+                  description: Optional gateway address for this pool
+                autoAssign:
+                  type: boolean
+                  description: Whether to automatically allocate IPs from this pool
+            status:
+              type: object
+              properties:
+                totalIPs:
+                  type: integer
+                  description: Total number of addresses in the pool
+                allocatedIPs:
+                  type: integer
+                  description: Number of allocated addresses
+                freeIPs:
+                  type: integer
+                  description: Number of available addresses
+                nextIndex:
+                  type: integer
+                  default: 1
+                releasedIndexes:
+                  type: array
+                  items:
+                    type: integer
+
+      subresources:
+        status: {}
+      selectableFields:
+        - jsonPath: .status.totalIPs
+        - jsonPath: .status.allocatedIPs
+        - jsonPath: .status.freeIps
