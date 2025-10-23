@@ -81,9 +81,10 @@ func (s *IpamService) createIPAssignment(containerInterface, namespace, name, ip
 		},
 		TypeMeta: v1.TypeMeta{
 			Kind:       "PublicIPAllocation",
-			APIVersion: "v1alpha1",
+			APIVersion: "ovn.ik8s.ir/v1alpha1",
 		},
 		Spec: types.PublicIPAllocationSpec{
+			PublicIpPoolName:   ipPool.GetName(),
 			MacAddress:         macAddress,
 			ContainerInterface: containerInterface,
 			IpFamily:           ipFamily,
@@ -103,7 +104,7 @@ func (s *IpamService) createIPAssignment(containerInterface, namespace, name, ip
 	if err != nil {
 		return nil, err
 	}
-	allocUnstruct, err := runtime.DefaultUnstructuredConverter.ToUnstructured(alloc)
+	allocUnstruct, err := runtime.DefaultUnstructuredConverter.ToUnstructured(&alloc)
 	if err != nil {
 		return nil, err
 	}
